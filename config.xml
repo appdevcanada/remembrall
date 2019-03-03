@@ -2,10 +2,10 @@
 <widget id="ca.edumedia.mora0199.remembrall" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>mora0199</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        The app will use localNotifications to save the dates of special occasions, and Cordova iOS.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="mora0199@algonquinlive.com" href="https://github.com/mora0199/remembrall">
+        Remembrall
     </author>
     <content src="index.html" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
@@ -23,4 +23,6 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <engine name="ios" spec="^4.5.5" />
+    <plugin name="de.appplant.cordova.plugin.local-notification" spec="^0.8.5" />
 </widget>

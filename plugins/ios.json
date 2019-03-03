@@ -1,0 +1,25 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "ca.edumedia.mora0199.remembrall"
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+      "PACKAGE_NAME": "ca.edumedia.mora0199.remembrall"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "ca.edumedia.mora0199.remembrall"
+    },
+    "cordova-plugin-app-event": {
+      "PACKAGE_NAME": "ca.edumedia.mora0199.remembrall"
+    }
+  }
+}
