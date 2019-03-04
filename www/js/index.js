@@ -1,46 +1,212 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
+// Author: Luis Souza
+// REMEMBRALL App - just a simple app that saves
+// reminders and shows them using Local Notifications
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
-    onDeviceReady: function() {
-        this.receivedEvent('deviceready');
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
+let app = {
+  track: [{
+    id: 1,
+    src: '/media/Believer.mp3',
+    img: '/img/img1.png',
+    volume: 0.5,
+    title: 'Believer',
+    artist: "Imagine Dragons"
+  }],
+  media: null,
+  pages: [],
+  tracksel: -1,
+  musicStatus: 0,
+  m_dur: -1,
+  ended: false,
+  err: {
+    '1': 'MEDIA_ERR_ABORTED',
+    '2': 'MEDIA_ERR_NETWORK'
+  },
+  init: function () {
+    document.addEventListener('deviceready', app.ready, false);
+  },
+  ready: function () {
+    app.addListeners();
+  },
+  ftw: function () {
+    //success creating the media object and playing or stopping
+    if (app.musicStatus == Media.MEDIA_STOPPED && app.ended) {
+      app.tracksel++;
+      if (app.tracksel == 5) app.tracksel = 0;
+      app.media.release();
+      app.media = new Media(app.track[app.tracksel].src, app.ftw, app.wtf, app.statusChange);
+      app.media.play();
+    };
+  },
+  wtf: function (err) {
+    //failure of playback of media object
+    console.warn('failure');
+    console.error(err);
+  },
+  statusChange: function (status) {
+    console.log('media status is now ' + app.status[status]);
+    app.musicStatus = status;
+    if (app.musicStatus == Media.MEDIA_RUNNING) {
+      app.ended = true;
+      document.querySelector('#play-pause-btn').style.backgroundImage = 'url(file:///android_asset/www/img/btn-pause.svg)';
+    } else {
+      document.querySelector('#play-pause-btn').style.backgroundImage = 'url(file:///android_asset/www/img/btn-play.svg)';
     }
+  },
+  addListeners: function () {
+    document.querySelector('#play-pause-btn').addEventListener('click', app.play);
+    document.querySelector('#stop-btn').addEventListener('click', app.stop);
+    document.querySelector('#up-btn').addEventListener('click', app.volumeUp);
+    document.querySelector('#down-btn').addEventListener('click', app.volumeDown);
+    document.querySelector('#ff-btn').addEventListener('click', app.ff);
+    document.querySelector('#rew-btn').addEventListener('click', app.rew);
+    document.addEventListener('pause', () => {
+      app.ended = false;
+      app.media.release();
+      console.log('system paused');
+    });
+    document.addEventListener('menubutton', () => {
+      app.ended = false;
+      app.media.pause();
+      console.log('clicked the menu button');
+    });
+    document.addEventListener('resume', () => {
+      console.log('system resumed');
+      let src = app.track[app.tracksel].src;
+      app.media = new Media(src, app.ftw, app.wtf, app.statusChange);
+      app.media.play();
+    });
+    let arrayItems = document.querySelectorAll('.music-item');
+    arrayItems.forEach(function (item) {
+      item.addEventListener("click", app.play);
+    });
+    let arrayDetails = document.querySelectorAll('.music-details');
+    arrayDetails.forEach(function (det) {
+      det.addEventListener("click", app.detail);
+    });
+    document.querySelector('#back-btn').addEventListener('click', app.back);
+  },
+  play: function (e) {
+    console.log(app.tracksel, e.target.id, e.target.parentElement.id);
+    if (((isNaN(e.target.id) && isNaN(e.target.parentElement.id)) || ((app.tracksel == e.target.id - 1) || (app.tracksel == e.target.parentElement.id - 1))) && (app.musicStatus == Media.MEDIA_RUNNING)) {
+      app.media.pause();
+    } else {
+      // if ((app.tracksel == e.target.id - 1) || (app.tracksel == e.target.parentElement.id - 1)) {
+      if (app.tracksel == -1 && isNaN(e.target.id) && isNaN(e.target.parentElement.id)) {
+        console.log("entrei");
+        let src = app.track[0].src;
+        app.tracksel = 0;
+        app.media = new Media(src, app.ftw, app.wtf, app.statusChange);
+      } else {
+        if (!e.target.id) {
+          app.tracksel = e.target.parentElement.id - 1;
+        } else {
+          if (e.target.id > 0) {
+            app.tracksel = e.target.id - 1;
+          }
+        };
+        if (e.target.id > 0 || e.target.parentElement.id > 0) {
+          if (app.musicStatus == Media.MEDIA_RUNNING || app.musicStatus == Media.MEDIA_PAUSED) {
+            app.ended = false;
+            app.media.stop();
+            app.media.release();
+          };
+          let src = app.track[app.tracksel].src;
+          app.media = new Media(src, app.ftw, app.wtf, app.statusChange);
+        };
+      };
+      app.media.play();
+      // };
+    };
+  },
+  pause: function () {
+    app.media.pause();
+  },
+  stop: function () {
+    app.media.stop();
+    app.ended = false;
+  },
+  volumeUp: function () {
+    vol = app.track[app.tracksel].volume;
+    console.log('current volume UP', vol);
+    vol += 0.1;
+    if (vol > 1) {
+      vol = 1.0;
+    };
+    console.log('current volume UP', vol);
+    app.media.setVolume(vol);
+    app.track[app.tracksel].volume = vol;
+  },
+  volumeDown: function () {
+    vol = parseFloat(app.track[app.tracksel].volume);
+    console.log('current volume DOWN', vol);
+    vol -= 0.1;
+    if (vol < 0) {
+      vol = 0;
+    };
+    console.log('current volume DOWN', vol);
+    app.media.setVolume(vol);
+    app.track[app.tracksel].volume = vol;
+  },
+  ff: function () {
+    app.media.getCurrentPosition((pos) => {
+      let dur = app.media.getDuration();
+      console.log('current position', pos);
+      console.log('duration', dur);
+      pos += 10;
+      if (pos < dur) {
+        app.media.seekTo(pos * 1000);
+      };
+    });
+  },
+  rew: function () {
+    app.media.getCurrentPosition((pos) => {
+      pos -= 10;
+      if (pos > 0) {
+        app.media.seekTo(pos * 1000);
+      } else {
+        app.media.seekTo(0);
+      }
+    });
+  },
+  detail: function (e) {
+    e.stopPropagation();
+    pages = document.querySelectorAll(".pages");
+    pages[0].classList.toggle("hide");
+    pages[1].classList.toggle("hide");
+    if (app.tracksel != e.target.id - 1) {
+      if (app.musicStatus == Media.MEDIA_RUNNING || app.musicStatus == Media.MEDIA_PAUSED) {
+        app.ended = false;
+        app.media.stop();
+        app.media.release();
+      }
+      app.tracksel = e.target.id - 1;
+      let src = app.track[app.tracksel].src;
+      app.media = new Media(src, app.ftw, app.wtf, app.statusChange);
+      app.media.play();
+    }
+    document.querySelector("#m-img").src = app.track[app.tracksel].img;
+    document.querySelector("#m-img").alt = app.track[app.tracksel].title;
+    document.querySelector("#m-artist").textContent = app.track[app.tracksel].artist;
+    document.querySelector("#m-title").textContent = app.track[app.tracksel].title;
+    let inter = setInterval(() => {
+      if (app.m_dur == -1) {
+        app.m_dur = app.media.getDuration();
+      } else {
+        clearInterval(inter);
+        let date = new Date(null);
+        date.setSeconds(parseInt(app.m_dur));
+        app.m_dur = date.toISOString().substr(14, 5);
+        document.querySelector("#m-duration").textContent = app.m_dur;
+        app.m_dur = -1;
+      }
+    }, 100);
+  },
+  back: function (e) {
+    e.stopPropagation();
+    pages = document.querySelectorAll(".pages");
+    pages[0].classList.toggle("hide");
+    pages[1].classList.toggle("hide");
+  }
 };
 
-app.initialize();
+app.init();

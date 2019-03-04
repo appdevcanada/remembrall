@@ -1,115 +1,236 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+@import url("SF.otf");
+
 * {
     -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    box-sizing: border-box;
 }
 
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color:#E4E4E4;
-    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0, #A7A7A7),
-        color-stop(0.51, #E4E4E4)
-    );
-    background-attachment:fixed;
-    font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
-    font-size:12px;
-    height:100%;
-    margin:0px;
-    padding:0px;
-    text-transform:uppercase;
-    width:100%;
+    background-color: rgb(0, 0, 0);
+    font-family: 'SF Compact Rounded Regular', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1rem;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
 }
 
 /* Portrait layout (default) */
 .app {
-    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
+    background:url(file:///android_asset/www/img/headphone.png) no-repeat center top;
     position:absolute;             /* position in the center of the screen */
-    left:50%;
-    top:50%;
-    height:50px;                   /* text area height */
-    width:225px;                   /* text area width */
     text-align:center;
     padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
     margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
                                    /* offset horizontal: half of text area width */
 }
 
+h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.player {
+    position: fixed;
+    align-content: center;
+    text-align: center;
+    width: 100%;
+    height: 80px;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    color: rgb(0, 0, 0);
+    background-color:rgba(82, 255, 55, 0.6);
+}
+.pages {
+    display: block;
+    z-index: 10;
+    margin-top: 80px;
+    width: 100%;
+    left: 0;
+}
+
+.hide {
+    display: none;
+}
+
+input, button {
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    border: none;
+    outline: none;
+    height: 36px;
+    width: 50px;
+    vertical-align: middle;
+}
+#play-pause-btn {
+    background-image: url(file:///android_asset/www/img/btn-play.svg);
+}
+#stop-btn {
+    background-image: url(file:///android_asset/www/img/btn-stop.svg);
+}
+#up-btn {
+    background-image: url(file:///android_asset/www/img/btn-up.svg);
+}
+#down-btn {
+    background-image: url(file:///android_asset/www/img/btn-down.svg);
+}
+#ff-btn {
+    background-image: url(file:///android_asset/www/img/btn-ff.svg);
+}
+#rew-btn {
+    background-image: url(file:///android_asset/www/img/btn-rew.svg);
+}
+
+.music-list {
+    list-style-type: none;
+    margin: 0;
+    margin-right: 4px;
+    padding: 0;
+}
+
+.music-item {
+    margin: 2px;
+    padding: 5px;
+    display: grid;
+    grid-auto-rows: 75px;
+    grid-template-areas:
+        "i a a"
+        "i t m";
+    grid-template-columns: 1fr 2fr;
+    background-color:rgb(40, 40, 40);
+    align-content: start;
+    align-items: start;
+    justify-self: start;
+    width: 100%;
+    height: 150px;
+}
+
+.music-img {
+    grid-area: i;
+    justify-self: start;
+    height: 140px;
+}
+
+.music-artist {
+    grid-area: a;
+    color: rgb(210, 210, 210);
+    padding: 0.5rem;
+    font-weight: 600;
+    margin-right: 5px;
+    text-align: left;
+}
+
+.music-title {
+    grid-area: t;
+    color: rgb(152, 151, 151);
+    padding: 0.5rem;
+    text-align: left;
+}
+
+button.music-details,
+input.music-details {
+    grid-area: m;
+    padding: 0.4rem;
+    margin-top: 10px;
+    margin-right: 5px;
+    align-self: center;
+    justify-self: center;
+    background-position: center center;
+    background-image: url(file:///android_asset/www/img/more.png);
+}
+
+.detail {
+    padding: 5px;
+    display: grid;
+    grid-template-areas:
+        "bck"
+        "img"
+        "art"
+        "tit"
+        "dur";
+    grid-template-columns: 1fr;
+    grid-template-rows: 40px 380px repeat(3, 40px);
+    align-content: start;
+    justify-self: center;
+    justify-items: center;
+    width: 100%;
+    height: auto;
+}
+
+#back-btn {
+    background-image: url(file:///android_asset/www/img/btn-back.png);
+    grid-area: bck;
+    justify-self: start;
+    justify-items: start;
+    height:40px;
+    width: 40px;
+}
+
+#m-img {
+    grid-area: img;
+    padding: 0.5rem;
+    height: 380px;
+}
+
+#m-artist {
+    grid-area: art;
+    color: rgb(210, 210, 210);
+    padding: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+#m-title {
+    grid-area: tit;
+    color: rgb(152, 151, 151);
+    padding: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+#m-duration {
+    grid-area: dur;
+    color: rgb(152, 151, 151);
+    padding: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width:684px) {
+    input, button {
+        width: 60px;
+    }
+}
+
+@media screen and (max-width:592px) {
+    input, button {
+        width: 50px;
+    }
+}
+
+@media screen and (max-width:360px) {
+    input, button {
+        width: 40px;
+    }
+}
+
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
     .app {
         background-position:left center;
-        padding:75px 0px 75px 170px;  /* padding-top + padding-bottom + text area = image height */
+        padding:75px 0px 75px 0px;  /* padding-top + padding-bottom + text area = image height */
         margin:-90px 0px 0px -198px;  /* offset vertical: half of image height */
                                       /* offset horizontal: half of image width and text area width */
     }
-}
-
-h1 {
-    font-size:24px;
-    font-weight:normal;
-    margin:0px;
-    overflow:visible;
-    padding:0px;
-    text-align:center;
-}
-
-.event {
-    border-radius:4px;
-    -webkit-border-radius:4px;
-    color:#FFFFFF;
-    font-size:12px;
-    margin:0px 30px;
-    padding:2px 0px;
-}
-
-.event.listening {
-    background-color:#333333;
-    display:block;
-}
-
-.event.received {
-    background-color:#4B946A;
-    display:none;
-}
-
-@keyframes fade {
-    from { opacity: 1.0; }
-    50% { opacity: 0.4; }
-    to { opacity: 1.0; }
-}
- 
-@-webkit-keyframes fade {
-    from { opacity: 1.0; }
-    50% { opacity: 0.4; }
-    to { opacity: 1.0; }
-}
- 
-.blink {
-    animation:fade 3000ms infinite;
-    -webkit-animation:fade 3000ms infinite;
 }
