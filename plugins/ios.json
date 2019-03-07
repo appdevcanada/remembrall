@@ -12,6 +12,9 @@
     },
     "de.appplant.cordova.plugin.local-notification": {
       "PACKAGE_NAME": "ca.edumedia.mora0199.remembrall"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "ca.edumedia.mora0199.remembrall"
     }
   },
   "dependent_plugins": {

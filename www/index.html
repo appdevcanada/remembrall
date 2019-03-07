@@ -16,32 +16,24 @@
 </head>
 
 <body>
-    <div class="notification">
+    <div class="top-banner">
         <h1>REMEMBRALL</h1>
-        <input type="button" id="rew-btn"></input>
-        <input type="button" id="play-pause-btn"></input>
-        <input type="button" id="stop-btn"></input>
-        <input type="button" id="ff-btn"></input>
-        <input type="button" id="up-btn"></input>
-        <input type="button" id="down-btn"></input>
+        <h3>List</h3>
     </div>
     <div class="pages" id="home">
-        <ul class="music-list">
-            <li class="music-item" id="1">
-                <img class="music-img" src="img/check.svg" alt="Believer" />
-                <h3 class="music-artist">Imagine Dragons</h3>
-                <h4 class="music-title">Believer</h4>
-                <input type="button" class="music-details" id="1"></input>
+        <ul class="remind-list">
+            <li class="remind-item" id="xx">
+                <h3 class="remind-lbl"></h3>
+                <h4 class="remind-date"></h4>
+                <input type="button" class="remind-del" id="xx"></input>
             </li>
         </ul>
     </div>
     <div class="pages hide" id="detail">
-        <div class="detail" id="m-detail">
-            <input type="button" id="back-btn"></input>
-            <img id="m-img" src="" alt="" />
-            <h4 id="m-artist"></h4>
-            <h4 id="m-title"></h4>
-            <h4 id="m-duration"></h4>
+        <div class="detail" id="r-detail">
+            <h3 id="remind-lbl"></h3>
+            <h4 id="remind-date"></h4>
+            <input type="button" class="remind-sav" id="xx"></input>
         </div>
     </div>
     <script type="text/javascript" src="js/index.js"></script>
