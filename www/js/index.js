@@ -3,24 +3,7 @@
 // reminders and shows them using Local Notifications
 
 let app = {
-  track: [{
-    id: 1,
-    src: '/media/Believer.mp3',
-    img: '/img/img1.png',
-    volume: 0.5,
-    title: 'Believer',
-    artist: "Imagine Dragons"
-  }],
-  media: null,
   pages: [],
-  tracksel: -1,
-  musicStatus: 0,
-  m_dur: -1,
-  ended: false,
-  err: {
-    '1': 'MEDIA_ERR_ABORTED',
-    '2': 'MEDIA_ERR_NETWORK'
-  },
   init: function () {
     document.addEventListener('deviceready', app.ready, false);
   },
@@ -28,185 +11,132 @@ let app = {
     app.addListeners();
   },
   ftw: function () {
-    //success creating the media object and playing or stopping
-    if (app.musicStatus == Media.MEDIA_STOPPED && app.ended) {
-      app.tracksel++;
-      if (app.tracksel == 5) app.tracksel = 0;
-      app.media.release();
-      app.media = new Media(app.track[app.tracksel].src, app.ftw, app.wtf, app.statusChange);
-      app.media.play();
-    };
+    console.log("OK");
   },
   wtf: function (err) {
-    //failure of playback of media object
     console.warn('failure');
     console.error(err);
   },
-  statusChange: function (status) {
-    console.log('media status is now ' + app.status[status]);
-    app.musicStatus = status;
-    if (app.musicStatus == Media.MEDIA_RUNNING) {
-      app.ended = true;
-      document.querySelector('#play-pause-btn').style.backgroundImage = 'url(file:///android_asset/www/img/btn-pause.svg)';
-    } else {
-      document.querySelector('#play-pause-btn').style.backgroundImage = 'url(file:///android_asset/www/img/btn-play.svg)';
-    }
-  },
   addListeners: function () {
-    document.querySelector('#play-pause-btn').addEventListener('click', app.play);
-    document.querySelector('#stop-btn').addEventListener('click', app.stop);
-    document.querySelector('#up-btn').addEventListener('click', app.volumeUp);
-    document.querySelector('#down-btn').addEventListener('click', app.volumeDown);
-    document.querySelector('#ff-btn').addEventListener('click', app.ff);
-    document.querySelector('#rew-btn').addEventListener('click', app.rew);
     document.addEventListener('pause', () => {
-      app.ended = false;
-      app.media.release();
       console.log('system paused');
-    });
-    document.addEventListener('menubutton', () => {
-      app.ended = false;
-      app.media.pause();
-      console.log('clicked the menu button');
     });
     document.addEventListener('resume', () => {
       console.log('system resumed');
-      let src = app.track[app.tracksel].src;
-      app.media = new Media(src, app.ftw, app.wtf, app.statusChange);
-      app.media.play();
     });
-    let arrayItems = document.querySelectorAll('.music-item');
-    arrayItems.forEach(function (item) {
-      item.addEventListener("click", app.play);
-    });
-    let arrayDetails = document.querySelectorAll('.music-details');
-    arrayDetails.forEach(function (det) {
-      det.addEventListener("click", app.detail);
-    });
-    document.querySelector('#back-btn').addEventListener('click', app.back);
+    document.querySelector('#rem-add').addEventListener('click', app.add);
+    document.querySelector('#lblCancel').addEventListener('click', app.cancel);
+    document.querySelector('#lblDone').addEventListener('click', app.save);
+    app.loadEvents();
   },
-  play: function (e) {
-    console.log(app.tracksel, e.target.id, e.target.parentElement.id);
-    if (((isNaN(e.target.id) && isNaN(e.target.parentElement.id)) || ((app.tracksel == e.target.id - 1) || (app.tracksel == e.target.parentElement.id - 1))) && (app.musicStatus == Media.MEDIA_RUNNING)) {
-      app.media.pause();
-    } else {
-      // if ((app.tracksel == e.target.id - 1) || (app.tracksel == e.target.parentElement.id - 1)) {
-      if (app.tracksel == -1 && isNaN(e.target.id) && isNaN(e.target.parentElement.id)) {
-        console.log("entrei");
-        let src = app.track[0].src;
-        app.tracksel = 0;
-        app.media = new Media(src, app.ftw, app.wtf, app.statusChange);
-      } else {
-        if (!e.target.id) {
-          app.tracksel = e.target.parentElement.id - 1;
-        } else {
-          if (e.target.id > 0) {
-            app.tracksel = e.target.id - 1;
-          }
-        };
-        if (e.target.id > 0 || e.target.parentElement.id > 0) {
-          if (app.musicStatus == Media.MEDIA_RUNNING || app.musicStatus == Media.MEDIA_PAUSED) {
-            app.ended = false;
-            app.media.stop();
-            app.media.release();
-          };
-          let src = app.track[app.tracksel].src;
-          app.media = new Media(src, app.ftw, app.wtf, app.statusChange);
-        };
-      };
-      app.media.play();
-      // };
-    };
+  loadEvents: function () {
+    let remList = document.querySelector("#remList");
+    remList.innerHTML = "";
+    let notification = cordova.plugins.notification.local;
+    notification.getAll(elements => {
+      elements.sort((a, b) => {
+        return a.at - b.at;
+      }).forEach(item => {
+        console.log(item);
+        let listLine = document.createElement("li");
+        listLine.setAttribute("class", "remind-item");
+        listLine.setAttribute("id", item.id);
+        let h4Line = document.createElement("h4");
+        h4Line.setAttribute("class", "remind-lbl");
+        h4Line.setAttribute("id", item.id);
+        h4Line.textContent = item.title;
+        let h5Line = document.createElement("h5");
+        h5Line.setAttribute("class", "remind-dt");
+        h5Line.setAttribute("id", item.id);
+        h5Line.textContent = new Date(item.at);
+        let btnDel = document.createElement("input");
+        btnDel.setAttribute("type", "button");
+        btnDel.setAttribute("class", "remind-del");
+        btnDel.setAttribute("id", item.id);
+
+        remList.appendChild(listLine);
+        listLine.appendChild(h4Line);
+        listLine.appendChild(h5Line);
+        listLine.appendChild(btnDel);
+        remList.addEventListener("click", app.update);
+        btnDel.addEventListener("click", app.delete);
+      });
+    })
+
   },
-  pause: function () {
-    app.media.pause();
-  },
-  stop: function () {
-    app.media.stop();
-    app.ended = false;
-  },
-  volumeUp: function () {
-    vol = app.track[app.tracksel].volume;
-    console.log('current volume UP', vol);
-    vol += 0.1;
-    if (vol > 1) {
-      vol = 1.0;
-    };
-    console.log('current volume UP', vol);
-    app.media.setVolume(vol);
-    app.track[app.tracksel].volume = vol;
-  },
-  volumeDown: function () {
-    vol = parseFloat(app.track[app.tracksel].volume);
-    console.log('current volume DOWN', vol);
-    vol -= 0.1;
-    if (vol < 0) {
-      vol = 0;
-    };
-    console.log('current volume DOWN', vol);
-    app.media.setVolume(vol);
-    app.track[app.tracksel].volume = vol;
-  },
-  ff: function () {
-    app.media.getCurrentPosition((pos) => {
-      let dur = app.media.getDuration();
-      console.log('current position', pos);
-      console.log('duration', dur);
-      pos += 10;
-      if (pos < dur) {
-        app.media.seekTo(pos * 1000);
-      };
-    });
-  },
-  rew: function () {
-    app.media.getCurrentPosition((pos) => {
-      pos -= 10;
-      if (pos > 0) {
-        app.media.seekTo(pos * 1000);
-      } else {
-        app.media.seekTo(0);
-      }
-    });
-  },
-  detail: function (e) {
+  add: function (e) {
     e.stopPropagation();
-    pages = document.querySelectorAll(".pages");
-    pages[0].classList.toggle("hide");
-    pages[1].classList.toggle("hide");
-    if (app.tracksel != e.target.id - 1) {
-      if (app.musicStatus == Media.MEDIA_RUNNING || app.musicStatus == Media.MEDIA_PAUSED) {
-        app.ended = false;
-        app.media.stop();
-        app.media.release();
-      }
-      app.tracksel = e.target.id - 1;
-      let src = app.track[app.tracksel].src;
-      app.media = new Media(src, app.ftw, app.wtf, app.statusChange);
-      app.media.play();
+    e.preventDefault();
+    console.log(e.target.id);
+    app.switchPages();
+  },
+  update: function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    console.log(e.target.id);
+    let notification = cordova.plugins.notification.local;
+    notification.get(e.target.id, function (notifications) {
+      let newDate = new Date(notifications.at);
+      let newTime = new Date().getTime(notifications.at);
+      console.log(newDate, newTime);
+      document.querySelector("#lblDone").dataset.id = notifications.id;
+      document.querySelector("#rem-lbl").value = notifications.title;
+      document.querySelector("#rem-date").value = newDate;
+      document.querySelector("#rem-time").value = newTime;
+    });
+    app.switchPages();
+  },
+  cancel: function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    app.clearForm();
+    app.switchPages();
+  },
+  save: function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    let notification = cordova.plugins.notification.local;
+    let newId = new Date().getTime();
+    console.log("ID:", e.target.id);
+    console.log("Data ID:", e.target.dataset.id);
+    if (!isNaN(e.target.dataset.id)) {
+      cordova.plugins.notification.local.cancel(e.target.dataset.id, app.doNothing, this);
     }
-    document.querySelector("#m-img").src = app.track[app.tracksel].img;
-    document.querySelector("#m-img").alt = app.track[app.tracksel].title;
-    document.querySelector("#m-artist").textContent = app.track[app.tracksel].artist;
-    document.querySelector("#m-title").textContent = app.track[app.tracksel].title;
-    let inter = setInterval(() => {
-      if (app.m_dur == -1) {
-        app.m_dur = app.media.getDuration();
-      } else {
-        clearInterval(inter);
-        let date = new Date(null);
-        date.setSeconds(parseInt(app.m_dur));
-        app.m_dur = date.toISOString().substr(14, 5);
-        document.querySelector("#m-duration").textContent = app.m_dur;
-        app.m_dur = -1;
-      }
-    }, 100);
+    let remDt = Date.parse(document.querySelector("#rem-date").value + "T" + document.querySelector("#rem-time").value + ":00");
+    console.log(remDt);
+    notification.schedule({
+      id: newId,
+      title: document.querySelector("#rem-lbl").value,
+      at: remDt
+    }, app.loadEvents);
+    document.querySelector("#lblDone").dataset.id = "";
+    app.clearForm();
+    app.switchPages();
   },
-  back: function (e) {
+  delete: function (e) {
     e.stopPropagation();
+    e.preventDefault();
+    let lblTitle = "Delete Event?";
+    let lblMessage = "Deleting this reminder will also remove it from the list";
+    let btnLabels = ["Cancel", "Delete"];
+    navigator.notification.confirm(lblMessage, function (btnIndex) {
+      if (btnIndex == 2) {
+        cordova.plugins.notification.local.cancel(parseInt(e.target.id), app.loadEvents, this);
+      }
+    }, lblTitle, btnLabels);
+  },
+  switchPages: function (e) {
+    pages = document.querySelectorAll(".top-banner");
+    pages[0].classList.toggle("hide");
+    pages[1].classList.toggle("hide");
     pages = document.querySelectorAll(".pages");
     pages[0].classList.toggle("hide");
     pages[1].classList.toggle("hide");
-  }
+  },
+  clearForm: function () {
+    document.querySelector("#frmForm").reset();
+  },
+  doNothing: function () { console.log("ID Deleted"); }
 };
 
 app.init();

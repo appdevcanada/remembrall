@@ -1,4 +1,4 @@
-@import url("SF.otf");
+@import url("../css/SF.otf");
 
 * {
     -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
@@ -9,7 +9,10 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color: rgb(0, 0, 0);
+    padding-top: 1.25rem;                       /* iOs 10 or lower */
+    padding-top: constant(safe-area-inset-top); /* iOS 11.0 */
+    padding-top: env(safe-area-inset-top);      /* iOS 11.2 */
+    background-color: rgb(255, 255, 255);
     font-family: 'SF Compact Rounded Regular', Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 1rem;
@@ -19,218 +22,223 @@ body {
     padding: 0px;
 }
 
-/* Portrait layout (default) */
-.app {
-    background:url(file:///android_asset/www/img/headphone.png) no-repeat center top;
-    position:absolute;             /* position in the center of the screen */
-    text-align:center;
-    padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
-    margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
-                                   /* offset horizontal: half of text area width */
-}
-
-h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 8px;
+h4 {
+    margin: 0px;
+    margin-top: 5px;
     text-align: center;
 }
 
-.player {
+h5 {
+    margin: 0px;
+}
+
+.top-banner {
     position: fixed;
     align-content: center;
     text-align: center;
     width: 100%;
-    height: 80px;
+    height: 40px;
     z-index: 50;
     top: 0;
     left: 0;
     color: rgb(0, 0, 0);
-    background-color:rgba(82, 255, 55, 0.6);
+    background-color:rgba(63, 186, 223, 0.6);
 }
+
+.footer {
+    position: fixed;
+    margin-bottom: constant(safe-area-inset-bottom); /* iOS 11.0 */
+    margin-bottom: env(safe-area-inset-bottom);     /* iOS 11.2 */
+    align-content: center;
+    text-align: center;
+    padding: 5px 0;
+    width: 100%;
+    z-index: 50;
+    bottom: 0;
+    left: 0;
+    color: rgb(0, 0, 0);
+    background-color:rgb(63, 186, 223);
+}
+
 .pages {
     display: block;
     z-index: 10;
-    margin-top: 80px;
+    margin-top: 40px;
+    margin-bottom: 40px;
     width: 100%;
+    height: 100%;
     left: 0;
+}
+
+.show {
+    display: block;
 }
 
 .hide {
     display: none;
 }
 
-input, button {
+#rem-add, .remind-del {
     background-color: transparent; /* make the button transparent */
     background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: center center;
+    background-size: contain;
     border: none;
     outline: none;
     height: 36px;
-    width: 50px;
+    width: 36px;
     vertical-align: middle;
-}
-#play-pause-btn {
-    background-image: url(file:///android_asset/www/img/btn-play.svg);
-}
-#stop-btn {
-    background-image: url(file:///android_asset/www/img/btn-stop.svg);
-}
-#up-btn {
-    background-image: url(file:///android_asset/www/img/btn-up.svg);
-}
-#down-btn {
-    background-image: url(file:///android_asset/www/img/btn-down.svg);
-}
-#ff-btn {
-    background-image: url(file:///android_asset/www/img/btn-ff.svg);
-}
-#rew-btn {
-    background-image: url(file:///android_asset/www/img/btn-rew.svg);
+    align-self: center;
+    justify-self: center;
 }
 
-.music-list {
+#rem-add {
+    background-image: url(../img/add.png);
+}
+
+.remind-list {
     list-style-type: none;
     margin: 0;
-    margin-right: 4px;
     padding: 0;
 }
 
-.music-item {
-    margin: 2px;
+.remind-item {
     padding: 5px;
+    border-bottom: 1px solid rgb(165, 165, 165);
     display: grid;
-    grid-auto-rows: 75px;
+    grid-auto-rows: 40px;
     grid-template-areas:
-        "i a a"
-        "i t m";
-    grid-template-columns: 1fr 2fr;
-    background-color:rgb(40, 40, 40);
+        "l del"
+        "d del";
+    grid-template-columns: 2fr;
+    background-color:rgb(255, 255, 255);
     align-content: start;
     align-items: start;
     justify-self: start;
     width: 100%;
-    height: 150px;
+    height: auto;
 }
 
-.music-img {
-    grid-area: i;
-    justify-self: start;
-    height: 140px;
-}
-
-.music-artist {
-    grid-area: a;
-    color: rgb(210, 210, 210);
+.remind-lbl {
+    grid-area: l;
+    color: rgb(103, 103, 103);
     padding: 0.5rem;
     font-weight: 600;
     margin-right: 5px;
     text-align: left;
 }
 
-.music-title {
-    grid-area: t;
-    color: rgb(152, 151, 151);
+.remind-dt {
+    grid-area: d;
+    color: rgb(140, 140, 140);
     padding: 0.5rem;
     text-align: left;
 }
 
-button.music-details,
-input.music-details {
-    grid-area: m;
-    padding: 0.4rem;
-    margin-top: 10px;
-    margin-right: 5px;
-    align-self: center;
-    justify-self: center;
-    background-position: center center;
-    background-image: url(file:///android_asset/www/img/more.png);
+button.remind-del,
+input.remind-del {
+    grid-area: del;
+    background-image: url(../img/delete.svg);
 }
 
 .detail {
     padding: 5px;
     display: grid;
     grid-template-areas:
-        "bck"
-        "img"
-        "art"
-        "tit"
-        "dur";
-    grid-template-columns: 1fr;
-    grid-template-rows: 40px 380px repeat(3, 40px);
-    align-content: start;
-    justify-self: center;
-    justify-items: center;
+        "rem rem"
+        "lbl lbl"
+        "wh wh"
+        "dt tm";
+    grid-template-columns: 1fr 1fr;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: stretch;
     width: 100%;
     height: auto;
 }
 
-#back-btn {
-    background-image: url(file:///android_asset/www/img/btn-back.png);
-    grid-area: bck;
+#rem-lbl, #rem-date, #rem-time {
+    color: rgb(90, 90, 90);
+    font-size: 1rem;
+}
+
+#remlbl {
+    grid-area: rem;
+    padding: 15px 0 3px 5px;
+}
+
+#whlbl {
+    grid-area: wh;
+    padding: 15px 0 3px 5px;
+}
+
+#rem-lbl {
+    grid-area: lbl;
+}
+
+#rem-date {
+    grid-area: dt;
+}
+
+#rem-time {
+    grid-area: tm;
+    align-self: start;
+}
+
+.det-header {
+    display: grid;
+    grid-template-areas:
+        "ccl lbl done";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 40px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: stretch;
+    width: 100%;
+    height: auto;
+}
+
+#lblCancel, #lblDone {
+    padding-bottom: 3px;
+    align-self: end;
+    color: rgb(42, 120, 179);
+}
+
+#lblCancel {
+    grid-area: ccl;
     justify-self: start;
-    justify-items: start;
-    height:40px;
-    width: 40px;
+    padding-left: 5px;
+    color: rgb(42, 120, 179);
 }
 
-#m-img {
-    grid-area: img;
-    padding: 0.5rem;
-    height: 380px;
+#det-title {
+    grid-area: lbl;
+    align-self: start;
+    justify-self: center;
 }
-
-#m-artist {
-    grid-area: art;
-    color: rgb(210, 210, 210);
-    padding: 0.5rem;
-    font-weight: 600;
-    text-align: center;
-    font-size: 1.5rem;
-}
-
-#m-title {
-    grid-area: tit;
-    color: rgb(152, 151, 151);
-    padding: 0.5rem;
-    font-weight: 600;
-    text-align: center;
-    font-size: 1.2rem;
-}
-
-#m-duration {
-    grid-area: dur;
-    color: rgb(152, 151, 151);
-    padding: 0.5rem;
-    font-weight: 600;
-    text-align: center;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+#lblDone {
+    grid-area: done;
+    justify-self: end;
+    padding-right: 5px;
 }
 
 @media screen and (max-width:684px) {
-    input, button {
+    /* input, button {
         width: 60px;
-    }
+    } */
 }
 
 @media screen and (max-width:592px) {
-    input, button {
+    /* input, button {
         width: 50px;
-    }
+    } */
 }
 
 @media screen and (max-width:360px) {
-    input, button {
+    /* input, button {
         width: 40px;
-    }
+    } */
 }
 
-/* Landscape layout (with min-width) */
-@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
-    .app {
-        background-position:left center;
-        padding:75px 0px 75px 0px;  /* padding-top + padding-bottom + text area = image height */
-        margin:-90px 0px 0px -198px;  /* offset vertical: half of image height */
-                                      /* offset horizontal: half of image width and text area width */
-    }
-}

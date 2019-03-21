@@ -10,31 +10,40 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport"
-        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, viewport-fit=cover">
     <link rel="stylesheet" type="text/css" href="css/index.css">
     <title>Remembrall</title>
 </head>
 
 <body>
     <div class="top-banner">
-        <h1>REMEMBRALL</h1>
-        <h3>List</h3>
+        <h4>REMEMBRALL</h4>
+        <h5>Event List</h5>
+    </div>
+    <div class="top-banner hide">
+        <div class="det-header">
+            <h5 id="lblCancel">Cancel</h5>
+            <h4 id="det-title">Create Reminder</h4>
+            <h5 id="lblDone" data-id="">Done</h5>
+        </div>
     </div>
     <div class="pages" id="home">
-        <ul class="remind-list">
-            <li class="remind-item" id="xx">
-                <h3 class="remind-lbl"></h3>
-                <h4 class="remind-date"></h4>
-                <input type="button" class="remind-del" id="xx"></input>
-            </li>
+        <ul class="remind-list" id="remList">
         </ul>
     </div>
     <div class="pages hide" id="detail">
-        <div class="detail" id="r-detail">
-            <h3 id="remind-lbl"></h3>
-            <h4 id="remind-date"></h4>
-            <input type="button" class="remind-sav" id="xx"></input>
-        </div>
+        <form id="frmForm">
+            <div class="detail" id="">
+                <h5 id="remlbl">Reminder</h5>
+                <input type="text" id="rem-lbl"></input>
+                <h5 id="whlbl">When</h5>
+                <input type="date" id="rem-date"></input>
+                <input type="time" id="rem-time"></input>
+            </div>
+        </form>
+    </div>
+    <div class="footer">
+        <input type="button" class="remind-add" id="rem-add"></input>
     </div>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
