@@ -15,6 +15,9 @@
     },
     "cordova-plugin-dialogs": {
       "PACKAGE_NAME": "ca.edumedia.mora0199.remembrall"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "ca.edumedia.mora0199.remembrall"
     }
   },
   "dependent_plugins": {

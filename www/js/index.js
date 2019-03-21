@@ -69,6 +69,7 @@ let app = {
     e.preventDefault();
     console.log(e.target.id);
     app.switchPages();
+    document.querySelector("#rem-lbl").focus();
   },
   update: function (e) {
     e.stopPropagation();
@@ -97,17 +98,19 @@ let app = {
     e.preventDefault();
     let notification = cordova.plugins.notification.local;
     let newId = new Date().getTime();
-    console.log("ID:", e.target.id);
-    console.log("Data ID:", e.target.dataset.id);
-    if (!isNaN(e.target.dataset.id)) {
+    console.log("Dataset:", e.target.dataset.id);
+    if (e.target.dataset.id != "") {
       cordova.plugins.notification.local.cancel(e.target.dataset.id, app.doNothing, this);
     }
-    let remDt = Date.parse(document.querySelector("#rem-date").value + "T" + document.querySelector("#rem-time").value + ":00");
-    console.log(remDt);
+    let remDt = JSON.parse(moment(document.querySelector("#rem-date").value + "T" + document.querySelector("#rem-time").value + ":00.000Z").format("x"));
+    let newDt = new Date(remDt);
+
+    console.log("Remdt", remDt);
+    console.log(newDt);
     notification.schedule({
       id: newId,
       title: document.querySelector("#rem-lbl").value,
-      at: remDt
+      at: newDt * 1000
     }, app.loadEvents);
     document.querySelector("#lblDone").dataset.id = "";
     app.clearForm();

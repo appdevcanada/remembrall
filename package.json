@@ -14,6 +14,7 @@
         "cordova-plugin-app-event": "^1.2.1",
         "cordova-plugin-device": "^2.0.2",
         "cordova-plugin-dialogs": "^2.0.1",
+        "cordova-plugin-splashscreen": "^5.0.2",
         "cordova-plugin-whitelist": "^1.3.3",
         "de.appplant.cordova.plugin.local-notification": "^0.8.5"
     },
@@ -21,7 +22,8 @@
         "plugins": {
             "cordova-plugin-whitelist": {},
             "de.appplant.cordova.plugin.local-notification": {},
-            "cordova-plugin-dialogs": {}
+            "cordova-plugin-dialogs": {},
+            "cordova-plugin-splashscreen": {}
         },
         "platforms": [
             "ios"
