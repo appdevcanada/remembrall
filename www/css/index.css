@@ -24,7 +24,7 @@ body {
 
 h4 {
     margin: 0px;
-    margin-top: 35px;
+    margin-top: 8px;
     text-align: center;
 }
 
@@ -34,7 +34,7 @@ h5 {
 
 .top-banner {
     position: fixed;
-    margin-top: 30px;
+    /* margin-top: 30px; */
     align-content: center;
     text-align: center;
     width: 100%;
@@ -44,6 +44,10 @@ h5 {
     left: 0;
     color: rgb(0, 0, 0);
     background-color:rgba(63, 186, 223, 0.6);
+}
+
+.top-banner > p {
+    margin-top: 31px;
 }
 
 .footer {

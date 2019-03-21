@@ -37,7 +37,6 @@ let app = {
       elements.sort((a, b) => {
         return a.at - b.at;
       }).forEach(item => {
-        console.log(item);
         let listLine = document.createElement("li");
         listLine.setAttribute("class", "remind-item");
         listLine.setAttribute("id", item.id);
@@ -48,7 +47,7 @@ let app = {
         let h5Line = document.createElement("h5");
         h5Line.setAttribute("class", "remind-dt");
         h5Line.setAttribute("id", item.id);
-        h5Line.textContent = new Date(item.at);
+        h5Line.textContent = moment(item.at).format('llll');
         let btnDel = document.createElement("input");
         btnDel.setAttribute("type", "button");
         btnDel.setAttribute("class", "remind-del");
@@ -67,19 +66,17 @@ let app = {
   add: function (e) {
     e.stopPropagation();
     e.preventDefault();
-    console.log(e.target.id);
     app.switchPages();
     document.querySelector("#rem-lbl").focus();
   },
   update: function (e) {
     e.stopPropagation();
     e.preventDefault();
-    console.log(e.target.id);
     let notification = cordova.plugins.notification.local;
     notification.get(e.target.id, function (notifications) {
-      let newDate = new Date(notifications.at);
-      let newTime = new Date().getTime(notifications.at);
-      console.log(newDate, newTime);
+      let ndate = new Date(notifications.at);
+      let newDate = ndate.toISOString().slice(0, 10);
+      let newTime = ndate.getUTCHours() + ':' + ndate.getUTCMinutes();
       document.querySelector("#lblDone").dataset.id = notifications.id;
       document.querySelector("#rem-lbl").value = notifications.title;
       document.querySelector("#rem-date").value = newDate;
@@ -98,15 +95,12 @@ let app = {
     e.preventDefault();
     let notification = cordova.plugins.notification.local;
     let newId = new Date().getTime();
-    console.log("Dataset:", e.target.dataset.id);
     if (e.target.dataset.id != "") {
       cordova.plugins.notification.local.cancel(e.target.dataset.id, app.doNothing, this);
     }
     let remDt = JSON.parse(moment(document.querySelector("#rem-date").value + "T" + document.querySelector("#rem-time").value + ":00.000Z").format("x"));
     let newDt = new Date(remDt);
 
-    console.log("Remdt", remDt);
-    console.log(newDt);
     notification.schedule({
       id: newId,
       title: document.querySelector("#rem-lbl").value,
