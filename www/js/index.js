@@ -47,7 +47,10 @@ let app = {
         let h5Line = document.createElement("h5");
         h5Line.setAttribute("class", "remind-dt");
         h5Line.setAttribute("id", item.id);
-        h5Line.textContent = moment(item.at).format('llll');
+        let ndate = new Date(item.at);
+        let newDate = ndate.toISOString().slice(0, 10);
+        let newTime = ndate.getUTCHours() + ':' + ndate.getUTCMinutes();
+        h5Line.textContent = moment(newDate).format('ll') + " @ " + newTime;
         let btnDel = document.createElement("input");
         btnDel.setAttribute("type", "button");
         btnDel.setAttribute("class", "remind-del");
