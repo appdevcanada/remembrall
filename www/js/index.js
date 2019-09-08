@@ -47,7 +47,7 @@ let app = {
         let h5Line = document.createElement("h5");
         h5Line.setAttribute("class", "remind-dt");
         h5Line.setAttribute("id", item.id);
-        let ndate = new Date(item.at);
+        let ndate = new Date(item.at / 1000);
         let newDate = ndate.toISOString().slice(0, 10);
         let newTime = ndate.getUTCHours() + ':' + ndate.getUTCMinutes();
         h5Line.textContent = moment(newDate).format('ll') + " @ " + newTime;
